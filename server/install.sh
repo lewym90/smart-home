@@ -12,6 +12,8 @@ if ss -ltnpH '( sport = :80 or sport = :443 )' | grep -v caddy | grep -q .; then
 fi
 IP=$(curl -4fsS https://api.ipify.org)
 HOST="${IP//./-}.sslip.io"
+PORT=18787
+if ss -ltnpH "( sport = :$PORT )" | grep -v node | grep -q .; then echo "STOP: port $PORT jest zajęty."; exit 2; fi
 DIR=/opt/smart-home-push
 ENVF=/etc/smart-home-push.env
 echo "Instaluję pakiety..."
@@ -38,6 +40,7 @@ DATA_FILE=/var/lib/smart-home-push/subs.json
 EOF
   chown smarthome: "$ENVF"
 fi
+grep -q '^PORT=' "$ENVF" && sed -i "s/^PORT=.*/PORT=$PORT/" "$ENVF" || echo "PORT=$PORT" >> "$ENVF"
 cat > /etc/systemd/system/smart-home-push.service <<EOF
 [Unit]
 Description=Smart Home push
@@ -54,17 +57,21 @@ ReadWritePaths=/var/lib/smart-home-push
 [Install]
 WantedBy=multi-user.target
 EOF
-cat > /etc/caddy/Caddyfile <<EOF
-$HOST {
-  reverse_proxy 127.0.0.1:8787
-}
-EOF
+# Nigdy nie nadpisuje cudzej konfiguracji: dopisuje blok i zostawia kopię.
+CF=/etc/caddy/Caddyfile
+cp -n "$CF" "$CF.przed-smart-home" 2>/dev/null || true
+if grep -q "^$HOST" "$CF"; then
+  sed -i "s/reverse_proxy 127.0.0.1:[0-9]*/reverse_proxy 127.0.0.1:$PORT/" "$CF"
+else
+  grep -qE '^:80' "$CF" && : > "$CF"
+  printf '\n%s {\n  reverse_proxy 127.0.0.1:%s\n}\n' "$HOST" "$PORT" >> "$CF"
+fi
 echo "Uruchamiam..."
 systemctl daemon-reload
 systemctl enable --now smart-home-push >/dev/null
 systemctl restart smart-home-push caddy
 command -v ufw >/dev/null && ufw status | grep -q active && { ufw allow 80,443/tcp >/dev/null; }
-sleep 8
+sleep 20
 . "$ENVF"
 curl -fsS "https://$HOST/health" >/dev/null && STATUS=OK || STATUS="BŁĄD: https://$HOST/health nie odpowiada"
 echo
