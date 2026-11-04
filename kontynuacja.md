@@ -31,6 +31,12 @@ Na serwerze 188-68-247-201.sslip.io działa wiele innych aplikacji. Caddyfile na
 ## Pełny ekran na iOS
 Kalendarz d10b57a: iOS skraca okno, gdy dokument nie jest przewijalny, dlatego w index.html jest niewidoczny #docspacer. Interfejs .app jest fixed, przewija się main. Nie rozciągać interfejsu poza okno, bo iOS obcina dolny pasek.
 
+## Urządzenia użytkownika
+- Klimatyzacja: Kaisai Fly KWX-12KRHI, fabryka Midea, Wi-Fi wbudowane, aplikacja producenta KAISAI Smart.
+- Pralka: Toshiba TW-BL80A2, z Wi-Fi, aplikacja TSmartLife (dostawca Midea).
+- Termometry: dwa Shenzhen Farylink, bez modelu na etykiecie. Protokół nieustalony.
+- Żadne nie jest jeszcze w sieci. Plan: Home Assistant Green i integracja midea_ac_lan (konto SmartHome). Rezerwa: gniazdko z pomiarem mocy dla pralki, nadajnik IR dla klimy.
+
 ## Do zrobienia
 1. Uruchomić server/install.sh na serwerze użytkownika (wynajęty, Ubuntu 24.04, bez domeny: adres przez sslip.io).
 2. Marki i modele urządzeń od użytkownika, postawienie HA.
