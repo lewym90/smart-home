@@ -48,9 +48,11 @@
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html { background: var(--bg); }
-/* Strona stoi w miejscu, przewija się tylko panel main. Na iOS z ekranu początkowego to usuwa pas pod dolnym paskiem. */
-html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
-body { position: fixed; inset: 0; width: 100%; margin: 0; color: var(--text); background: var(--bg); }
+/* iOS (aplikacja z ekranu początkowego) skraca okno, jeśli sam dokument nie jest przewijalny.
+   Niewidoczny dystans czyni dokument przewijalnym, a interfejs (position: fixed) i tak się nie rusza. Tak samo w Kalendarzu. */
+html, body { height: 100%; overscroll-behavior: none; }
+body { margin: 0; color: var(--text); background: var(--bg); }
+#docspacer { position: absolute; top: 0; left: 0; width: 1px; height: calc(100vh + 120px); visibility: hidden; pointer-events: none; }
 button, input, select { font: inherit; color: inherit; }
 button { background: none; border: 0; padding: 0; cursor: pointer; text-align: left; touch-action: manipulation; }
 button:disabled { opacity: .45; cursor: default; }
@@ -77,7 +79,7 @@ small { font-size: 14px; color: var(--muted); }
 .filled { fill: currentColor; }
 
 .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
-.app { position: fixed; inset: 0; bottom: calc(-1 * var(--gap, 0px)); overflow: hidden; background: radial-gradient(120% 70% at 50% 35%, var(--bg-2), var(--bg) 70%); }
+.app { position: fixed; inset: 0; overflow: hidden; background: radial-gradient(120% 70% at 50% 35%, var(--bg-2), var(--bg) 70%); }
 main { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding-bottom: calc(92px + var(--safe-b)); }
 
 /* Dolny pasek */

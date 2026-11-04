@@ -29,7 +29,7 @@ Przez użytkownika: instalacja na ekranie początkowym i próbne powiadomienie p
 Na serwerze 188-68-247-201.sslip.io działa wiele innych aplikacji. Caddyfile należy do Typera, trasy innych aplikacji są w /etc/caddy/conf.d. Nigdy nie nadpisywać Caddyfile. Zajęte porty sprawdzać przed wyborem: 8787 Typer, 18787 nav-tts. Smart Home push: port 18871, trasa /smart-home-push/. Caddyfile po naprawie z 4.11.2026: blok główny (import conf.d, Typer na 8787) i planer.188-68-247-201.sslip.io na 8788; kopie: Caddyfile.po-awarii, Caddyfile.przed-planerem.
 
 ## Pełny ekran na iOS
-Strona jest nieruchoma (body fixed), przewija się tylko main, jak w Kalendarzu i Egidzie. Elementy dolne są absolute w .app, a --gap dociąga interfejs do dołu ekranu.
+Kalendarz d10b57a: iOS skraca okno, gdy dokument nie jest przewijalny, dlatego w index.html jest niewidoczny #docspacer. Interfejs .app jest fixed, przewija się main. Nie rozciągać interfejsu poza okno, bo iOS obcina dolny pasek.
 
 ## Do zrobienia
 1. Uruchomić server/install.sh na serwerze użytkownika (wynajęty, Ubuntu 24.04, bez domeny: adres przez sslip.io).
