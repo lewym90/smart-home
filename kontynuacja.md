@@ -23,6 +23,9 @@ Stan na 4.11.2026. Wersja 1.0 w trybie demo + działające połączenie z Home A
 - Prawdziwe urządzenia użytkownika. Pralka jest rozpoznawana po nazwie urządzenia i encji, klasyfikator może wymagać dopasowania do konkretnej integracji.
 - Wykres energii na prawdziwych statystykach HA (przetestowana tylko logika liczenia).
 
+## Serwer
+Na serwerze 188-68-247-201.sslip.io działa wiele innych aplikacji. Caddyfile należy do Typera, trasy innych aplikacji są w /etc/caddy/conf.d. Nigdy nie nadpisywać Caddyfile. Zajęte porty sprawdzać przed wyborem: 8787 Typer, 18787 nav-tts. Smart Home push: port 18871, trasa /smart-home-push/.
+
 ## Do zrobienia
 1. Uruchomić server/install.sh na serwerze użytkownika (wynajęty, Ubuntu 24.04, bez domeny: adres przez sslip.io).
 2. Marki i modele urządzeń od użytkownika, postawienie HA.

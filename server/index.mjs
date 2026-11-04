@@ -5,7 +5,7 @@ import { readFileSync, writeFileSync, renameSync, existsSync } from 'node:fs';
 import { timingSafeEqual } from 'node:crypto';
 import webpush from 'web-push';
 
-const { PORT = '8787', APP_KEY, NOTIFY_SECRET, VAPID_PUBLIC, VAPID_PRIVATE, VAPID_SUBJECT = 'mailto:admin@example.com',
+const { PORT = '18871', APP_KEY, NOTIFY_SECRET, VAPID_PUBLIC, VAPID_PRIVATE, VAPID_SUBJECT = 'mailto:admin@example.com',
   ALLOWED_ORIGIN = 'https://lewym90.github.io', DATA_FILE = './subs.json' } = process.env;
 if (!APP_KEY || !NOTIFY_SECRET || !VAPID_PUBLIC || !VAPID_PRIVATE) {
   console.error('Brak zmiennych APP_KEY, NOTIFY_SECRET, VAPID_PUBLIC lub VAPID_PRIVATE');
