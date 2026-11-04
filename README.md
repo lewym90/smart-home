@@ -28,6 +28,29 @@ http:
     - https://TWOJ-LOGIN.github.io
 ```
 
+## Powiadomienia przez serwer
+
+Na serwerze z Ubuntu:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/lewym90/smart-home/main/server/install.sh | sudo bash
+```
+
+Skrypt instaluje Caddy (https) i usługę `smart-home-push`, a na końcu wypisuje kod do aplikacji i sekret dla Home Assistanta. Kod wklejasz w aplikacji: Więcej, Powiadomienia. W `configuration.yaml`:
+
+```yaml
+rest_command:
+  smart_home_push:
+    url: https://ADRES-SERWERA/notify
+    method: POST
+    headers:
+      Authorization: Bearer SEKRET
+    content_type: application/json
+    payload: '{"title":"{{ title }}","body":"{{ body }}"}'
+```
+
+Automatyzacja wywołuje wtedy akcję `rest_command.smart_home_push` z polami `title` i `body`.
+
 ## Struktura
 
 - `src/ha/types.ts`: wspólny interfejs `Provider`

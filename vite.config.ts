@@ -10,7 +10,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['icons/*.png', 'img/*.webp'],
-      workbox: { globPatterns: ['**/*.{js,css,html,png,webp,svg}'], navigateFallback: 'index.html' },
+      workbox: { globPatterns: ['**/*.{js,css,html,png,webp,svg}'], navigateFallback: 'index.html', importScripts: ['push-sw.js'] },
       manifest: {
         name: 'Smart Home',
         short_name: 'Smart Home',

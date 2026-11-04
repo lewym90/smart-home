@@ -24,9 +24,9 @@ Stan na 4.11.2026. Wersja 1.0 w trybie demo + działające połączenie z Home A
 - Wykres energii na prawdziwych statystykach HA (przetestowana tylko logika liczenia).
 
 ## Do zrobienia
-1. Dane serwera od użytkownika: gdzie stoi, system, domena. Potem serwer push.
+1. Uruchomić server/install.sh na serwerze użytkownika (wynajęty, Ubuntu 24.04, bez domeny: adres przez sslip.io).
 2. Marki i modele urządzeń od użytkownika, postawienie HA.
-3. Powiadomienia push przez serwer użytkownika: HA wysyła sygnał na serwer, serwer wysyła Web Push na iPhone. Dziś powiadomienia działają tylko w aplikacji.
+3. Podpiąć w HA automatyzację końca prania do rest_command.smart_home_push. Serwer push jest w server/, kod jest gotowy.
 4. Wersja 2: kreator automatyzacji z warunkami, analityka, raporty energii.
 
 ## Ograniczenia PWA względem specyfikacji

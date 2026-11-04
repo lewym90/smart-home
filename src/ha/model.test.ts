@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { DemoProvider } from './demo';
 import { summarizeEnergy, isMixedContent, normalizeUrl } from './hass';
+import { parsePairing } from '../push';
 import { activeAlerts, activeScene, buildHome, plDevices, quickScenes, washerFrom } from './model';
 import type { Entity, Snapshot } from './types';
 
@@ -60,6 +61,14 @@ describe('połączenie', () => {
     expect(isMixedContent('http://192.168.1.5:8123', 'https:')).toBe(true);
     expect(isMixedContent('https://dom.net', 'https:')).toBe(false);
     expect(isMixedContent('http://192.168.1.5:8123', 'http:')).toBe(false);
+  });
+});
+
+describe('kod parowania', () => {
+  it('rozdziela adres i klucz', () => expect(parsePairing(' https://1-2-3-4.sslip.io#abc ')).toEqual({ url: 'https://1-2-3-4.sslip.io', key: 'abc' }));
+  it('odrzuca http i brak klucza', () => {
+    expect(parsePairing('http://x#abc')).toBeNull();
+    expect(parsePairing('https://x')).toBeNull();
   });
 });
 

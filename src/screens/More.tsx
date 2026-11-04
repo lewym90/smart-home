@@ -4,7 +4,8 @@ import { TILES, useApp, shrinkPhoto, type Settings, type TileId } from '../store
 import { binaryLabel, fmt, timeAgo } from '../ha/model';
 import type { EnergySummary, Me } from '../ha/types';
 import { isMixedContent, normalizeUrl } from '../ha/hass';
-import { PageHead, Row, go } from '../components/Ui';
+import { PageHead, Row, Toggle, go } from '../components/Ui';
+import { disablePush, enablePush, isSubscribed, parsePairing, pushProblem, sendTest, type PushConfig } from '../push';
 import { DeviceRow } from './Rooms';
 
 export function More() {
@@ -25,12 +26,54 @@ export function More() {
   );
 }
 
+const readPush = (): PushConfig | null => { try { return JSON.parse(localStorage.getItem('sh.push') ?? 'null'); } catch { return null; } };
+
+function PushCard() {
+  const { toast } = useApp();
+  const [cfg, setCfg] = useState<PushConfig | null>(readPush);
+  const [code, setCode] = useState('');
+  const [on, setOn] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const problem = pushProblem();
+  useEffect(() => { isSubscribed().then(setOn).catch(() => {}); }, []);
+  const run = async (f: () => Promise<void>) => {
+    setBusy(true); setError('');
+    try { await f(); } catch (e: any) { setError(e?.message ?? 'Nie udało się.'); }
+    setBusy(false);
+  };
+  const enable = () => run(async () => {
+    const c = cfg ?? parsePairing(code);
+    if (!c) throw new Error('To nie jest poprawny kod. Powinien zaczynać się od https:// i zawierać znak #.');
+    await enablePush(c);
+    try { localStorage.setItem('sh.push', JSON.stringify(c)); } catch { /* */ }
+    setCfg(c); setOn(true); toast('Powiadomienia włączone.');
+  });
+  return (
+    <section className="group">
+      <h2>Na telefonie</h2>
+      {problem ? <p className="notice warn">{problem}</p> : (
+        <div className="card push-card">
+          <div className="push-row">
+            <span className="row-text"><b>Powiadomienia push</b><small>{on ? 'Włączone' : 'Wyłączone'}</small></span>
+            <Toggle label="Powiadomienia push" on={on} pending={busy} disabled={busy || (!cfg && !code.trim())} onChange={(v) => v ? enable() : run(async () => { if (cfg) await disablePush(cfg); setOn(false); })} />
+          </div>
+          {!cfg && <label className="field"><span>Kod z serwera</span><input className="input" autoCapitalize="none" autoCorrect="off" spellCheck={false} value={code} onChange={(e) => setCode(e.target.value)} /></label>}
+          {on && cfg && <button className="btn wide" disabled={busy} onClick={() => run(async () => { const r = await sendTest(cfg); toast(r.sent ? 'Wysłano próbne powiadomienie.' : 'Serwer nie ma zapisanego telefonu.'); })}>Wyślij próbne powiadomienie</button>}
+        </div>
+      )}
+      {error && <p className="notice warn" role="alert">{error}</p>}
+    </section>
+  );
+}
+
 export function Notifications() {
   const { alerts, log, markRead, clearLog, openSheet } = useApp();
   useEffect(() => { markRead(); }, [markRead, log.length]);
   return (
     <div className="page">
       <PageHead title="Powiadomienia" back />
+      <PushCard />
       {alerts.length > 0 && (
         <section className="group"><h2>Teraz</h2><div className="list">
           {alerts.map((a) => <Row key={a.id} icon={<BellRing size={22} />} tone={a.level === 'danger' ? 'tone-heat' : 'tone-amber'} title={a.title} onClick={a.deviceId ? () => openSheet(a.deviceId!) : undefined} />)}

@@ -229,6 +229,9 @@ input[type="search"].input { margin-bottom: 14px; }
 .notice { margin-top: 14px; padding: 11px 13px; border-radius: 12px; font-size: 14px; line-height: 1.4; }
 .notice.warn { background: color-mix(in srgb, var(--amber) 14%, transparent); border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent); }
 
+.push-card { display: flex; flex-direction: column; gap: 12px; padding: 14px; }
+.push-row { display: flex; align-items: center; gap: 12px; }
+.push-card .field { margin-top: 0; }
 .status-hero { display: flex; align-items: center; gap: 14px; padding: 16px; }
 .status-hero span { display: flex; flex-direction: column; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
 .status-hero b { font-size: 18px; }
