@@ -1,0 +1,34 @@
+# Smart Home: kontynuacja
+
+Stan na 4.11.2026. Wersja 1.0 w trybie demo + działające połączenie z Home Assistant.
+
+## Decyzje
+- Aplikacja łączy się z Home Assistantem bezpośrednio. Własny serwer nie pośredniczy, bo dom ma działać bez niego (punkt 18 i 21 specyfikacji). Własny serwer zostaje na ewentualny push.
+- Konta, role, MFA i historia są w Home Assistant, nie budujemy drugiej bazy.
+- Logowanie tokenem długoterminowym. OAuth pominięty: przekierowanie na inną domenę w PWA na iOS otwiera osobne okno i nie wraca do aplikacji.
+- Stos: React, TypeScript, Vite, home-assistant-js-websocket, lucide-react, vite-plugin-pwa. Publikacja: GitHub Pages przez Actions.
+
+## Sprawdzone
+- Testy jednostkowe: `npm test`.
+- Prawdziwy Home Assistant 2026.2 z integracją demo: połączenie, sterowanie światłem, klimatyzacja, zapis automatyzacji i sceny, odczyt opisu automatyzacji.
+- Utrata połączenia: baner, zablokowane polecenia. Service worker: start aplikacji offline.
+
+## Ustalone z użytkownikiem
+- Sterowanie spoza domu jest wymagane: Tailscale na telefonie albo tunel przez serwer.
+- Powiadomienia (np. koniec prania) mają iść przez jego serwer.
+- Zdjęcia domu i pokoi są już docelowe, od użytkownika.
+
+## Niesprawdzone
+- Prawdziwy iPhone i ekran startowy.
+- Prawdziwe urządzenia użytkownika. Pralka jest rozpoznawana po nazwie urządzenia i encji, klasyfikator może wymagać dopasowania do konkretnej integracji.
+- Wykres energii na prawdziwych statystykach HA (przetestowana tylko logika liczenia).
+
+## Do zrobienia
+1. Dane serwera od użytkownika: gdzie stoi, system, domena. Potem serwer push.
+2. Marki i modele urządzeń od użytkownika, postawienie HA.
+3. Powiadomienia push przez serwer użytkownika: HA wysyła sygnał na serwer, serwer wysyła Web Push na iPhone. Dziś powiadomienia działają tylko w aplikacji.
+4. Wersja 2: kreator automatyzacji z warunkami, analityka, raporty energii.
+
+## Ograniczenia PWA względem specyfikacji
+Widżety iOS, Siri, Apple Watch i geofencing w tle nie są dostępne dla PWA. Obecność domowników daje aplikacja HA Companion (encje person), resztę wymagałaby aplikacja natywna.
+Uprawnienia per urządzenie: HA nie egzekwuje ich dla zwykłych użytkowników, więc ukrycie w aplikacji nie byłoby zabezpieczeniem.
