@@ -24,7 +24,7 @@ export function go(path: string) { location.hash = path; }
 export function useRoute() {
   const [r, set] = useState(() => location.hash.replace(/^#/, '') || '/');
   useEffect(() => {
-    const f = () => { set(location.hash.replace(/^#/, '') || '/'); window.scrollTo(0, 0); };
+    const f = () => { set(location.hash.replace(/^#/, '') || '/'); document.querySelector('main')?.scrollTo(0, 0); };
     addEventListener('hashchange', f);
     return () => removeEventListener('hashchange', f);
   }, []);
