@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Instaluje serwer powiadomień Smart Home na Ubuntu. Nie rusza niczego, jeśli porty 80/443 są zajęte.
 set -euo pipefail
+# Bez pytań instalatora i bez restartów innych usług na tym serwerze.
+export DEBIAN_FRONTEND=noninteractive NEEDRESTART_SUSPEND=1
+main() {
 [ "$(id -u)" -eq 0 ] || { echo "Uruchom przez sudo."; exit 1; }
 if ss -ltnpH '( sport = :80 or sport = :443 )' | grep -v caddy | grep -q .; then
   echo "STOP: porty 80 lub 443 zajmuje inny program. Nic nie zostało zmienione:"
@@ -11,8 +14,10 @@ IP=$(curl -4fsS https://api.ipify.org)
 HOST="${IP//./-}.sslip.io"
 DIR=/opt/smart-home-push
 ENVF=/etc/smart-home-push.env
+echo "Instaluję pakiety..."
 apt-get update -qq
-apt-get install -y -qq caddy nodejs npm curl >/dev/null
+timeout 600 apt-get install -y -qq -o Dpkg::Options::=--force-confold caddy nodejs npm curl >/dev/null
+echo "Instaluję usługę powiadomień..."
 id smarthome >/dev/null 2>&1 || useradd --system --no-create-home --shell /usr/sbin/nologin smarthome
 mkdir -p "$DIR" /var/lib/smart-home-push
 BASE=https://raw.githubusercontent.com/lewym90/smart-home/main/server
@@ -54,6 +59,7 @@ $HOST {
   reverse_proxy 127.0.0.1:8787
 }
 EOF
+echo "Uruchamiam..."
 systemctl daemon-reload
 systemctl enable --now smart-home-push >/dev/null
 systemctl restart smart-home-push caddy
@@ -68,3 +74,5 @@ echo "https://$HOST#$APP_KEY"
 echo
 echo "Sekret dla Home Assistanta:"
 echo "$NOTIFY_SECRET"
+}
+main </dev/null
