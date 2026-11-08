@@ -35,7 +35,9 @@ Kalendarz d10b57a: iOS skraca okno, gdy dokument nie jest przewijalny, dlatego w
 - Klimatyzacja: Kaisai Fly KWX-12KRHI, fabryka Midea, Wi-Fi wbudowane, aplikacja producenta KAISAI Smart.
 - Pralka: Toshiba TW-BL80A2, z Wi-Fi, aplikacja TSmartLife (dostawca Midea).
 - Termometry: dwa Shenzhen Farylink, bez modelu na etykiecie. Protokół nieustalony.
-- Żadne nie jest jeszcze w sieci. Plan: Home Assistant Green i integracja midea_ac_lan (konto SmartHome). Rezerwa: gniazdko z pomiarem mocy dla pralki, nadajnik IR dla klimy.
+- Stan 8.11.2026: klima sparowana w MSmartHome, dwa termometry (balkon, mieszkanie) i osuszacz EBERG RICO R12E2 w Smart Life (Tuya). Waga Bluetooth jeszcze niesparowana.
+- Decyzja użytkownika: zero sprzętu w domu. Home Assistant w Dockerze na serwerze (server/ha-install.sh, kontener smart-home-ha, port 127.0.0.1:18123, adres dom.188-68-247-201.sslip.io), integracje chmurowe: midea_auto_cloud (konto MSmartHome) i oficjalna Tuya (Smart Life).
+- Pralka Toshiba: chmura TSmartLife zamknięta, brak działającej integracji. Gniazdko odpada (pralka za meblami w wynajętym mieszkaniu). Zostaje w TSmartLife. Nie obiecywać więcej.
 
 ## Do zrobienia
 1. Uruchomić server/install.sh na serwerze użytkownika (wynajęty, Ubuntu 24.04, bez domeny: adres przez sslip.io).
